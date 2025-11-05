@@ -24,13 +24,14 @@ async function fetchWeather() {
   try {
     const res = await fetch(`/weather?city=${encodeURIComponent(city)}`);
     const data = await res.json();
-
+    console.log('API response:', data);
     if (data.error) throw new Error(data.error);
 
     displayCurrent(data);
     displayForecast(data.forecast);
-    updateBackground(data.condition);
+    updateWeatherAnimations(data.condition);
   } catch (err) {
+    console.error('Frontend error:', err.message);
     showError(err.message);
   } finally {
     showLoading(false);
@@ -76,22 +77,78 @@ function toggleUnit() {
   let current = parseInt(tempEl.textContent);
 
   if (isCelsius) {
-    // F → C
     tempEl.textContent = Math.round((current - 32) * 5/9);
   } else {
-    // C → F
     tempEl.textContent = Math.round(current * 9/5 + 32);
   }
 
-  // Update forecast too
   document.querySelectorAll('.forecast-card .temp').forEach(el => {
     let t = parseInt(el.textContent);
     el.textContent = isCelsius ? Math.round((t - 32) * 5/9) + '°' : Math.round(t * 9/5 + 32) + '°';
   });
 }
 
-function updateBackground(condition) {
-  document.body.className = '';
+function createParticles(condition, container) {
+  console.log(`Creating particles for condition: ${condition}`);
+  const numParticles = condition === 'Rain' || condition === 'Drizzle' ? 80 : 20;
+  const particleClass = condition === 'Clouds' ? 'cloud' : 'rain';
+  const duration = particleClass === 'cloud' ? 6000 : 700;
+
+  for (let i = 0; i < numParticles; i++) {
+    const particle = document.createElement('div');
+    particle.className = `particle ${particleClass}`;
+    particle.style.left = Math.random() * 100 + '%';
+    particle.style.top = Math.random() * 100 + '%';
+    particle.style.animationDelay = Math.random() * duration + 'ms';
+    particle.style.animationDuration = (Math.random() * duration + duration) + 'ms';
+    particle.style.opacity = Math.random() * 0.5 + 0.5;
+    container.appendChild(particle);
+  }
+  console.log(`Added ${numParticles} ${particleClass} particles`);
+}
+
+function updateWeatherAnimations(condition) {
+  console.log(`Updating animations for condition: ${condition}`);
+
+  // Clear existing particles and rays
+  const existingParticles = document.querySelector('.weather-particles');
+  if (existingParticles) {
+    console.log('Removing existing particles');
+    existingParticles.remove();
+  }
+
+  const weatherCard = document.getElementById('weather-card');
+  const existingRays = weatherCard.querySelector('.sun-rays');
+  if (existingRays) {
+    console.log('Removing existing sun rays');
+    existingRays.remove();
+  }
+
+  // Create particles container
+  const particlesContainer = document.createElement('div');
+  particlesContainer.className = 'weather-particles';
+  document.body.appendChild(particlesContainer);
+  console.log('Created particles container');
+
+  // Apply weather-specific animations
+  weatherCard.className = `weather-card ${condition.toLowerCase()}`;
+  console.log(`Set weather-card class to: ${weatherCard.className}`);
+
+  if (condition === 'Rain' || condition === 'Drizzle') {
+    createParticles(condition, particlesContainer);
+  } else if (condition === 'Clouds') {
+    createParticles(condition, particlesContainer);
+  } else if (condition === 'Clear') {
+    const rays = document.createElement('div');
+    rays.className = 'sun-rays';
+    weatherCard.appendChild(rays);
+    console.log('Added sun rays to weather card');
+  } else {
+    console.log(`No specific animation for condition: ${condition}`);
+  }
+
+  // Update background
+  document.body.className = document.body.classList.contains('dark-mode') ? 'dark-mode' : '';
   const map = {
     Clear: 'sunny',
     Clouds: 'cloudy',
@@ -104,6 +161,7 @@ function updateBackground(condition) {
   };
   const key = Object.keys(map).find(k => condition.includes(k)) || 'sunny';
   document.body.classList.add(map[key]);
+  console.log(`Set body class to: ${document.body.className}`);
 }
 
 // UI helpers
