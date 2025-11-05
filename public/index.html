@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Weather Forecast</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="icon" href="data:,"/>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Weather Forecast</h1>
+      <button id="theme-toggle">🌙 Dark Mode</button>
+    </header>
+
+    <div class="search-box">
+      <input type="text" id="city-input" placeholder="Enter city name..." autocomplete="off"/>
+      <button id="get-weather">Get Weather</button>
+    </div>
+
+    <div id="loading" class="loading hidden">
+      <div class="spinner"></div> Loading...
+    </div>
+
+    <div id="error" class="error hidden"></div>
+
+    <!-- Current Weather -->
+    <div id="weather-card" class="weather-card hidden">
+      <h2 id="city-name"></h2>
+      <img id="weather-icon" src="" alt=""/>
+      <div class="temperature">
+        <span id="temperature">--</span>
+        <button id="temp-toggle">°C</button>
+      </div>
+      <p id="description" class="description"></p>
+
+      <div class="details">
+        <div><span id="humidity">--</span>% Humidity</div>
+        <div><span id="wind-speed">--</span> km/h Wind</div>
+        <div><span id="pressure">--</span> hPa Pressure</div>
+      </div>
+    </div>
+
+    <!-- 5-day forecast -->
+    <div id="forecast" class="forecast hidden">
+      <h3>5-Day Forecast</h3>
+      <div id="forecast-list" class="forecast-list"></div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
