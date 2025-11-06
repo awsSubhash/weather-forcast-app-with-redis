@@ -29,6 +29,7 @@ async function fetchWeather() {
 
     displayCurrent(data);
     displayForecast(data.forecast);
+    displayHourly(data.hourly);
     updateWeatherAnimations(data.condition);
   } catch (err) {
     console.error('Frontend error:', err.message);
@@ -47,7 +48,7 @@ function displayCurrent(d) {
   document.getElementById('wind-speed').textContent = (d.windSpeed * 3.6).toFixed(1);
   document.getElementById('pressure').textContent = d.pressure;
 
-  document.getElementById('weather-card').classList.remove('hidden');
+  document.getElementById('weather-section').classList.remove('hidden');
 }
 
 function displayForecast(list) {
@@ -66,7 +67,25 @@ function displayForecast(list) {
     container.appendChild(card);
   });
 
-  document.getElementById('forecast').classList.remove('hidden');
+  document.getElementById('forecast-section').classList.remove('hidden');
+}
+
+function displayHourly(list) {
+  const container = document.getElementById('hourly-list');
+  container.innerHTML = '';
+
+  list.forEach(hour => {
+    const card = document.createElement('div');
+    card.className = 'hourly-card';
+    card.innerHTML = `
+      <p class="time">${hour.time}</p>
+      <img src="https://openweathermap.org/img/wn/${hour.icon}.png" alt="${hour.condition}">
+      <p class="temp">${hour.temp}°</p>
+    `;
+    container.appendChild(card);
+  });
+
+  document.getElementById('hourly-section').classList.remove('hidden');
 }
 
 function toggleUnit() {
@@ -83,6 +102,11 @@ function toggleUnit() {
   }
 
   document.querySelectorAll('.forecast-card .temp').forEach(el => {
+    let t = parseInt(el.textContent);
+    el.textContent = isCelsius ? Math.round((t - 32) * 5/9) + '°' : Math.round(t * 9/5 + 32) + '°';
+  });
+
+  document.querySelectorAll('.hourly-card .temp').forEach(el => {
     let t = parseInt(el.textContent);
     el.textContent = isCelsius ? Math.round((t - 32) * 5/9) + '°' : Math.round(t * 9/5 + 32) + '°';
   });
@@ -110,7 +134,6 @@ function createParticles(condition, container) {
 function updateWeatherAnimations(condition) {
   console.log(`Updating animations for condition: ${condition}`);
 
-  // Clear existing particles and rays
   const existingParticles = document.querySelector('.weather-particles');
   if (existingParticles) {
     console.log('Removing existing particles');
@@ -124,13 +147,11 @@ function updateWeatherAnimations(condition) {
     existingRays.remove();
   }
 
-  // Create particles container
   const particlesContainer = document.createElement('div');
   particlesContainer.className = 'weather-particles';
   document.body.appendChild(particlesContainer);
   console.log('Created particles container');
 
-  // Apply weather-specific animations
   weatherCard.className = `weather-card ${condition.toLowerCase()}`;
   console.log(`Set weather-card class to: ${weatherCard.className}`);
 
@@ -147,7 +168,6 @@ function updateWeatherAnimations(condition) {
     console.log(`No specific animation for condition: ${condition}`);
   }
 
-  // Update background
   document.body.className = document.body.classList.contains('dark-mode') ? 'dark-mode' : '';
   const map = {
     Clear: 'sunny',
@@ -164,7 +184,6 @@ function updateWeatherAnimations(condition) {
   console.log(`Set body class to: ${document.body.className}`);
 }
 
-// UI helpers
 function showLoading(yes) {
   document.getElementById('loading').classList.toggle('hidden', !yes);
 }
@@ -173,8 +192,11 @@ function showError(msg) {
   el.textContent = msg;
   el.classList.remove('hidden');
 }
-function clearError() { document.getElementById('error').classList.add('hidden'); }
+function clearError() {
+  document.getElementById('error').classList.add('hidden');
+}
 function hideWeather() {
-  document.getElementById('weather-card').classList.add('hidden');
-  document.getElementById('forecast').classList.add('hidden');
+  document.getElementById('weather-section').classList.add('hidden');
+  document.getElementById('forecast-section').classList.add('hidden');
+  document.getElementById('hourly-section').classList.add('hidden');
 }

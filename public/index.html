@@ -1,58 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Weather Forecast</title>
-  <link rel="stylesheet" href="style.css"/>
-  <link rel="icon" href="data:,"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather App</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="container">
     <header>
-      <h1>Weather Forecast</h1>
+      <h1>Weather App</h1>
       <button id="theme-toggle">🌙 Dark Mode</button>
     </header>
-
     <div class="search-box">
-      <input type="text" id="city-input" placeholder="Enter city name..." autocomplete="off"/>
+      <input type="text" id="city-input" placeholder="Enter city name">
       <button id="get-weather">Get Weather</button>
     </div>
-
     <div id="loading" class="loading hidden">
-      <div class="spinner"></div> Loading...
+      <span class="spinner"></span> Loading...
     </div>
-
     <div id="error" class="error hidden"></div>
-
-    <!-- Current Weather -->
-    <div id="weather-card" class="weather-card hidden">
-      <h2 id="city-name"></h2>
-      <img id="weather-icon" src="" alt=""/>
-      <div class="temperature">
-        <span id="temperature">--</span>
-        <button id="temp-toggle">°C</button>
+    <section id="weather-section" class="weather-section hidden">
+      <div id="weather-card" class="weather-card">
+        <h2 id="city-name"></h2>
+        <img id="weather-icon" alt="weather icon">
+        <div class="temperature">
+          <span id="temperature"></span>
+          <button id="temp-toggle">°C</button>
+        </div>
+        <p id="description"></p>
+        <div class="details">
+          <div>Humidity: <span id="humidity"></span>%</div>
+          <div>Wind: <span id="wind-speed"></span> km/h</div>
+          <div>Pressure: <span id="pressure"></span> hPa</div>
+        </div>
       </div>
-      <p id="description" class="description"></p>
-
-      <div class="details">
-        <div><span id="humidity">--</span>% Humidity</div>
-        <div><span id="wind-speed">--</span> km/h Wind</div>
-        <div><span id="pressure">--</span> hPa Pressure</div>
-      </div>
-    </div>
-
-    <!-- 5-day forecast -->
-    <div id="forecast" class="forecast hidden">
+    </section>
+    <section id="forecast-section" class="forecast-section hidden">
       <h3>5-Day Forecast</h3>
       <div id="forecast-list" class="forecast-list"></div>
-    </div>
+    </section>
+    <section id="hourly-section" class="hourly-section hidden">
+      <h3>Today's Hourly Forecast</h3>
+      <div id="hourly-list" class="hourly-list"></div>
+    </section>
   </div>
-
-<footer class="footer">
+  <footer class="footer">
     <p>Design and Build By Subhash Singh</p>
-  </footer> 
-  
+  </footer>
   <script src="script.js"></script>
 </body>
 </html>
